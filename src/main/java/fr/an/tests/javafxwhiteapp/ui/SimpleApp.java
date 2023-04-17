@@ -1,6 +1,9 @@
 package fr.an.tests.javafxwhiteapp.ui;
 
+import fr.an.tests.javafxwhiteapp.Modele.DrawingDocModel;
+import fr.an.tests.javafxwhiteapp.Vue.TextDrawingView;
 import javafx.application.Application;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
@@ -51,7 +54,18 @@ public class SimpleApp extends Application {
 			SplitPane splitViewPane = new SplitPane(view1, view2);
 			mainBorderPanel.setCenter(splitViewPane);
     	}
-    	
+
+		DrawingDocModel model = new DrawingDocModel();
+		model.setContent("drawing content will go here later");
+		{ // SplitPane( view1 | view2 )
+			TextDrawingView view1 = new TextDrawingView(model);
+			Node view1Comp = view1.getComponent();
+			TextDrawingView view2 = new TextDrawingView(model);
+			Node view2Comp = view2.getComponent();
+			SplitPane splitViewPane = new SplitPane(view1Comp, view2Comp);
+			mainBorderPanel.setCenter(splitViewPane);
+		}
+
 		Scene scene = new Scene(mainBorderPanel, 640, 480);
         stage.setScene(scene);
         stage.show();

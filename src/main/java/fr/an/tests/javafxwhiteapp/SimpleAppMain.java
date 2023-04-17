@@ -7,5 +7,7 @@ public class SimpleAppMain {
 
 	public static void main(String[] args) {
 		Application.launch(SimpleApp.class, args);
+
+
 	}
 }
