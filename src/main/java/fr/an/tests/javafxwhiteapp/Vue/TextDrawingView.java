@@ -1,12 +1,13 @@
 package fr.an.tests.javafxwhiteapp.Vue;
 
 import fr.an.tests.javafxwhiteapp.Modele.DrawingDocModel;
+import fr.an.tests.javafxwhiteapp.Modele.DrawingModelListener;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.BorderPane;
 
-public class TextDrawingView extends DrawingView {
+public class TextDrawingView extends DrawingView  implements DrawingModelListener {
 
     protected BorderPane component;
     protected TextArea textArea;
@@ -14,6 +15,7 @@ public class TextDrawingView extends DrawingView {
 
     public TextDrawingView(DrawingDocModel model) {
         super(model);
+        model.addListener(this); // publish&subscribe design pattern
         this.component = new BorderPane();
         this.textArea = new TextArea();
         component.setCenter(textArea);
@@ -29,5 +31,11 @@ public class TextDrawingView extends DrawingView {
     public void refreshModelToView() {
         String text = model.getContent();
         textArea.setText(text);
+    }
+
+    @Override
+    public void onModelChange() {
+        System.out.println("(from subscribe): model to view change");
+        refreshModelToView();
     }
 }
