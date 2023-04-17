@@ -6,7 +6,6 @@ import java.util.List;
 public class DrawingDocModel {
 
     protected List<DrawingModelListener> listeners = new ArrayList<>();
-
     public String documentName;
     // to be replaced next
     // by Drawing AST classes
@@ -26,7 +25,6 @@ public class DrawingDocModel {
         }
     }
 
-
     public String getDocumentName() {
         return documentName;
     }
@@ -41,6 +39,7 @@ public class DrawingDocModel {
 
     public void setContent(String content) {
         this.content = content;
+        fireModelChange(); // Appeler la méthode pour signaler un changement de modèle
     }
 
 

@@ -21,7 +21,15 @@ public class TextDrawingView extends DrawingView  implements DrawingModelListene
         component.setCenter(textArea);
         this.applyButton = new Button("Apply");
         component.setBottom(applyButton);
+        applyButton.setOnAction(e -> onClickApply());
         refreshModelToView();
+    }
+
+    private void onClickApply() {
+        System.out.println("apply view to model update");
+        String text = textArea.getText();
+        model.setContent(text); // => fireModelChange ..
+        System.out.println("model.setContent(text)" + model.getContent());
     }
 
     @Override
