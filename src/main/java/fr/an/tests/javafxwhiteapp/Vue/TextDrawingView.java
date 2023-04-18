@@ -1,11 +1,18 @@
 package fr.an.tests.javafxwhiteapp.Vue;
 
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.security.AnyTypePermission;
+import fr.an.tests.javafxwhiteapp.Elements.BaseDrawingElements;
+import fr.an.tests.javafxwhiteapp.Elements.DrawingElement;
+import fr.an.tests.javafxwhiteapp.Elements.DrawingPt;
 import fr.an.tests.javafxwhiteapp.Modele.DrawingDocModel;
 import fr.an.tests.javafxwhiteapp.Modele.DrawingModelListener;
+import fr.an.tests.javafxwhiteapp.Visitors.DrawingElementVisitor;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.BorderPane;
+
 
 public class TextDrawingView extends DrawingView  implements DrawingModelListener {
 
@@ -28,18 +35,40 @@ public class TextDrawingView extends DrawingView  implements DrawingModelListene
     private void onClickApply() {
         System.out.println("apply view to model update");
         String text = textArea.getText();
-        model.setContent(text); // => fireModelChange ..
-        System.out.println("model.setContent(text)" + model.getContent());
+        DrawingElement content = (DrawingElement) xstream.fromXML(text);
+        model.setContent(content); // => fireModelChange ..
     }
 
+
+    XStream xstream = createXStream();
+    static XStream createXStream() {
+        XStream xstream = new XStream();
+        xstream.addPermission(AnyTypePermission.ANY);
+        xstream.alias("Pt", DrawingPt.class);
+        xstream.alias("Text", BaseDrawingElements.TextDrawingElement.class);
+        xstream.alias("Line", BaseDrawingElements.LineDrawingElement.class);
+        xstream.alias("Circle", BaseDrawingElements.CircleDrawingElement.class);
+        xstream.alias("Rectangle", BaseDrawingElements.RectangleDrawingElement.class);
+        xstream.alias("Group", BaseDrawingElements.GroupDrawingElement.class);
+        return xstream;
+    }
     @Override
     public Node getComponent() {
         return component;
     }
-    public void refreshModelToView() {
-        String text = model.getContent();
+
+    protected void refreshModelToView() {
+        DrawingElement content = model.getContent();
+        String text = xstream.toXML(content);
         textArea.setText(text);
     }
+
+    private String recursiveElementToText(DrawingElement drawingElement) {
+        DrawingElementVisitor.TextDrawingElementVisitor visitor = new DrawingElementVisitor.TextDrawingElementVisitor();
+        drawingElement.accept(visitor);
+        return visitor.result;
+    }
+
 
     @Override
     public void onModelChange() {
