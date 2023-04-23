@@ -1,7 +1,5 @@
 package fr.an.tests.javafxwhiteapp.Handler;
 
-import javafx.scene.Cursor;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 
 public class DefaultSelectToolStateHandler extends ToolStateHandler {
@@ -10,16 +8,12 @@ public class DefaultSelectToolStateHandler extends ToolStateHandler {
     }
 
     @Override
-    public void onMouseMove(MouseEvent event) {
-
-    }
+    public void onMouseMove(MouseEvent event) {}
 
     @Override
-    public void onMouseClick(MouseEvent event) {
-    }
+    public void onMouseClick(MouseEvent event) {}
 
     @Override
-    public void OnRightMousePressed(MouseEvent event) {
-    }
+    public void OnRightMousePressed(MouseEvent event) {}
 
 }

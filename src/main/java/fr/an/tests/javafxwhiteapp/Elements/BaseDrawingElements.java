@@ -48,13 +48,6 @@ public class BaseDrawingElements {
             visitor.caseLine(this);
         }
 
-        @Override
-        public String toString() {
-            return "LineDrawingElement{" +
-                    "start X =" + start.getX() +  "start Y =" + start.getY() +
-                    ", end X=" + end.getX() +  ", end Y=" + end.getY() +
-                    '}';
-        }
     }
     public static class RectangleDrawingElement extends DrawingElement {
         public DrawingPt upLeft;

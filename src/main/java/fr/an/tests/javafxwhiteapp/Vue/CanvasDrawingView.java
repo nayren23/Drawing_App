@@ -12,7 +12,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.ToolBar;
 import javafx.scene.input.MouseEvent;
@@ -33,7 +32,6 @@ public class CanvasDrawingView extends DrawingView implements DrawingModelListen
     protected BaseDrawingElements.CircleDrawingElement currEditLineEndPt;
     protected BaseDrawingElements.LineDrawingElement currEditLine;
 
-    //List des Elements
     protected BaseDrawingElements.GroupDrawingElement content = (BaseDrawingElements.GroupDrawingElement) model.getContent();
 
     public CanvasDrawingView(DrawingDocModel model) {
@@ -81,7 +79,6 @@ public class CanvasDrawingView extends DrawingView implements DrawingModelListen
         currEditLineEndPt.center = currEditLine.end = new DrawingPt(x, y);
         updateCurrEditTool();
     }
-
 
     private void onClickToolNewLines() {
         this.currToolStateHandler = new StateInit_LinesToolStateHandler();

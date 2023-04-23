@@ -7,7 +7,6 @@ import fr.an.tests.javafxwhiteapp.Elements.DrawingElement;
 import fr.an.tests.javafxwhiteapp.Elements.DrawingPt;
 import fr.an.tests.javafxwhiteapp.Modele.DrawingDocModel;
 import fr.an.tests.javafxwhiteapp.Modele.DrawingModelListener;
-import fr.an.tests.javafxwhiteapp.Visitors.DrawingElementVisitor;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
@@ -39,7 +38,6 @@ public class TextDrawingView extends DrawingView  implements DrawingModelListene
         model.setContent(content); // => fireModelChange ..
     }
 
-
     XStream xstream = createXStream();
     static XStream createXStream() {
         XStream xstream = new XStream();
@@ -52,6 +50,7 @@ public class TextDrawingView extends DrawingView  implements DrawingModelListene
         xstream.alias("Group", BaseDrawingElements.GroupDrawingElement.class);
         return xstream;
     }
+
     @Override
     public Node getComponent() {
         return component;
@@ -62,13 +61,6 @@ public class TextDrawingView extends DrawingView  implements DrawingModelListene
         String text = xstream.toXML(content);
         textArea.setText(text);
     }
-
-    private String recursiveElementToText(DrawingElement drawingElement) {
-        DrawingElementVisitor.TextDrawingElementVisitor visitor = new DrawingElementVisitor.TextDrawingElementVisitor();
-        drawingElement.accept(visitor);
-        return visitor.result;
-    }
-
 
     @Override
     public void onModelChange() {
