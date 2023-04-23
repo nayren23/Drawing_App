@@ -6,7 +6,7 @@ import fr.an.tests.javafxwhiteapp.Elements.DrawingPt;
 import fr.an.tests.javafxwhiteapp.Handler.DefaultSelectToolStateHandler;
 import fr.an.tests.javafxwhiteapp.Handler.ToolStateHandler;
 import fr.an.tests.javafxwhiteapp.Modele.DrawingDocModel;
-import fr.an.tests.javafxwhiteapp.Modele.DrawingModelListener;
+import fr.an.tests.javafxwhiteapp.Handler.DrawingModelListener;
 import fr.an.tests.javafxwhiteapp.Visitors.DrawingElementVisitor;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -18,7 +18,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class CanvasDrawingView extends DrawingView implements DrawingModelListener {

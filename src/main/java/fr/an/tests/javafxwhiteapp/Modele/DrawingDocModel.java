@@ -1,6 +1,7 @@
 package fr.an.tests.javafxwhiteapp.Modele;
 
 import fr.an.tests.javafxwhiteapp.Elements.DrawingElement;
+import fr.an.tests.javafxwhiteapp.Handler.DrawingModelListener;
 
 import java.util.ArrayList;
 import java.util.List;

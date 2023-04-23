@@ -1,6 +1,6 @@
 package fr.an.tests.javafxwhiteapp;
 
-import fr.an.tests.javafxwhiteapp.ui.SimpleApp;
+import fr.an.tests.javafxwhiteapp.Vue.SimpleApp;
 import javafx.application.Application;
 
 public class SimpleAppMain {

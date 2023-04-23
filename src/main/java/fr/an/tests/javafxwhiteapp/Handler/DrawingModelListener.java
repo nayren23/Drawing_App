@@ -1,4 +1,4 @@
-package fr.an.tests.javafxwhiteapp.Modele;
+package fr.an.tests.javafxwhiteapp.Handler;
 
 public interface  DrawingModelListener {
     void onModelChange();

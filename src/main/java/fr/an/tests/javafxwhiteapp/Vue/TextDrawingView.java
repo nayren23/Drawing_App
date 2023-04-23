@@ -6,7 +6,7 @@ import fr.an.tests.javafxwhiteapp.Elements.BaseDrawingElements;
 import fr.an.tests.javafxwhiteapp.Elements.DrawingElement;
 import fr.an.tests.javafxwhiteapp.Elements.DrawingPt;
 import fr.an.tests.javafxwhiteapp.Modele.DrawingDocModel;
-import fr.an.tests.javafxwhiteapp.Modele.DrawingModelListener;
+import fr.an.tests.javafxwhiteapp.Handler.DrawingModelListener;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;

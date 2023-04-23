@@ -1,4 +1,4 @@
-package fr.an.tests.javafxwhiteapp.ui;
+package fr.an.tests.javafxwhiteapp.Vue;
 
 import fr.an.tests.javafxwhiteapp.Elements.BaseDrawingElements;
 import fr.an.tests.javafxwhiteapp.Elements.DrawingElement;
