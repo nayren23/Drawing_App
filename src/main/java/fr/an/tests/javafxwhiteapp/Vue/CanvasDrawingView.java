@@ -59,7 +59,7 @@ public class CanvasDrawingView extends DrawingView implements DrawingModelListen
             newLinesButton.setOnAction(e -> onClickToolNewLines());
             toolBar.getItems().add(newLinesButton);
         }
-        
+
         refreshModelToView();
     }
 
@@ -134,12 +134,11 @@ public class CanvasDrawingView extends DrawingView implements DrawingModelListen
         }
 
         @Override
-        public void onKeyPressed(KeyEvent event) {
-            if (event.getCode() == KeyCode.CONTROL) {
-                isAddingLines  = false;
-                System.out.println("c'est la fin");
-            }
-            }
+        public void OnRigthMousePressed(MouseEvent event) {
+            isAddingLines  = false;
+            addLineToContent();
+            System.out.println("c'est la fin du grand trait");
+        }
     }
 
     @Override
@@ -155,7 +154,22 @@ public class CanvasDrawingView extends DrawingView implements DrawingModelListen
 
         drawingPane.setOnMouseEntered(e -> currToolStateHandler.onMouseEntered());
         drawingPane.setOnMouseMoved(e -> currToolStateHandler.onMouseMove(e));
-        drawingPane.setOnMouseClicked(e -> currToolStateHandler.onMouseClick(e));
+        drawingPane.setOnMouseClicked(e -> {
+
+            currToolStateHandler.onMouseClick(e);
+
+        });
+        drawingPane.setOnMousePressed (e -> {
+            if (e.isSecondaryButtonDown()) {
+                // gérer le clic droit ici
+                System.out.println("je suis la raciste");
+                currToolStateHandler.OnRigthMousePressed(e);
+            }
+
+
+        });
+
+
     }
 
     /**
@@ -197,6 +211,18 @@ public class CanvasDrawingView extends DrawingView implements DrawingModelListen
         updateCurrEditTool();
     }
 
+    public void addLineToContent(){
+        BaseDrawingElements.LineDrawingElement addToModel = currEditLine;
+        BaseDrawingElements.GroupDrawingElement content = (BaseDrawingElements.GroupDrawingElement) model.getContent();
+        content.elements.add(addToModel);
+        model.setContent(content);
+        currEditLine = null;
+        currEditLineStartPt = null;
+        currEditLineEndPt = null;
+        updateCurrEditTool();
+        setToolHandler(new DefaultSelectToolStateHandler());
+        drawingPane.setCursor(Cursor.DEFAULT);
+    }
     protected class StateInit_LineToolStateHandler extends DefaultSelectToolStateHandler {
         @Override
         public void onMouseEntered() {
@@ -233,15 +259,7 @@ public class CanvasDrawingView extends DrawingView implements DrawingModelListen
 
         @Override
         public void onMouseClick(MouseEvent event) {
-            BaseDrawingElements.LineDrawingElement addToModel = currEditLine;
-            BaseDrawingElements.GroupDrawingElement content = (BaseDrawingElements.GroupDrawingElement) model.getContent();
-            content.elements.add(addToModel);
-            model.setContent(content);
-            currEditLine = null;
-            currEditLineStartPt = null;
-            currEditLineEndPt = null;
-            updateCurrEditTool();
-            setToolHandler(new DefaultSelectToolStateHandler());
+            addLineToContent();
         }
     }
     @Override
@@ -288,7 +306,7 @@ public class CanvasDrawingView extends DrawingView implements DrawingModelListen
         }
         @Override
         public void caseOther(DrawingElement p) {
-        // "not implemented/recognized drawingElement "+ p.getClass().getName();
+            // "not implemented/recognized drawingElement "+ p.getClass().getName();
         }
     }
 }

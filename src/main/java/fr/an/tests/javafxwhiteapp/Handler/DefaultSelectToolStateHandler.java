@@ -17,7 +17,8 @@ public class DefaultSelectToolStateHandler extends ToolStateHandler {
     @Override
     public void onMouseClick(MouseEvent event) {
     }
+
     @Override
-    public void onKeyPressed(KeyEvent event) {
+    public void OnRigthMousePressed(MouseEvent event) {
     }
 }
