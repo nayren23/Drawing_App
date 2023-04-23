@@ -62,6 +62,14 @@ public class CanvasDrawingView extends DrawingView implements DrawingModelListen
         refreshModelToView();
     }
 
+    private void GetCoordonee(MouseEvent event) {
+        double x = event.getX(), y = event.getY();
+        DrawingPt pt = new DrawingPt(x, y);
+        currEditLineStartPt = new BaseDrawingElements.CircleDrawingElement(pt, 2);
+        currEditLineEndPt = new BaseDrawingElements.CircleDrawingElement(pt, 2);
+        currEditLine = new BaseDrawingElements.LineDrawingElement(pt, pt);
+    }
+
     private void onClickToolNewLines() {
         this.currToolStateHandler = new StateInit_LinesToolStateHandler();
     }
@@ -75,12 +83,7 @@ public class CanvasDrawingView extends DrawingView implements DrawingModelListen
 
         @Override
         public void onMouseClick(MouseEvent event) {
-            double x = event.getX(), y = event.getY();
-
-            DrawingPt pt = new DrawingPt(x, y);
-            currEditLineStartPt = new BaseDrawingElements.CircleDrawingElement(pt, 2);
-            currEditLineEndPt = new BaseDrawingElements.CircleDrawingElement(pt, 2);
-            currEditLine = new BaseDrawingElements.LineDrawingElement(pt, pt);
+            GetCoordonee(event);
             content.elements.add(currEditLine);
             updateCurrEditTool();
             setToolHandler(new StatePt2_LinesToolStateHandler());
@@ -237,14 +240,11 @@ public class CanvasDrawingView extends DrawingView implements DrawingModelListen
 
         @Override
         public void onMouseClick(MouseEvent event) {
-            double x = event.getX(), y = event.getY();
-            DrawingPt pt = new DrawingPt(x, y);
-            currEditLineStartPt = new BaseDrawingElements.CircleDrawingElement(pt, 2);
-            currEditLineEndPt = new BaseDrawingElements.CircleDrawingElement(pt, 2);
-            currEditLine = new BaseDrawingElements.LineDrawingElement(pt, pt);
+            GetCoordonee(event);
             updateCurrEditTool();
             setToolHandler(new StatePt1_LineToolStateHandler());
         }
+
     }
 
     protected class StatePt1_LineToolStateHandler extends DefaultSelectToolStateHandler {
