@@ -76,6 +76,13 @@ public class CanvasDrawingView extends DrawingView implements DrawingModelListen
         currEditLineEndPt = null;
     }
 
+    private void onMouseMoved(MouseEvent event){
+        double x = event.getX(), y = event.getY();
+        currEditLineEndPt.center = currEditLine.end = new DrawingPt(x, y);
+        updateCurrEditTool();
+    }
+
+
     private void onClickToolNewLines() {
         this.currToolStateHandler = new StateInit_LinesToolStateHandler();
     }
@@ -115,9 +122,7 @@ public class CanvasDrawingView extends DrawingView implements DrawingModelListen
          */
         @Override
         public void onMouseMove(MouseEvent event) {
-            double x = event.getX(), y = event.getY();
-            currEditLineEndPt.center = currEditLine.end = new DrawingPt(x, y);
-            updateCurrEditTool();
+            onMouseMoved(event);
         }
 
         /**
@@ -188,11 +193,7 @@ public class CanvasDrawingView extends DrawingView implements DrawingModelListen
         if (currEditLine != null) {
             currEditLine.accept(visitor);
         }
-
         content.elements.forEach(element-> element.accept(visitor) );
-    /*    for (BaseDrawingElements.LineDrawingElement line :  content) {
-            line.accept(visitor);
-        }*/
         drawingPane.getChildren().addAll(currToolShapes);
     }
 
@@ -253,9 +254,7 @@ public class CanvasDrawingView extends DrawingView implements DrawingModelListen
         }
         @Override
         public void onMouseMove(MouseEvent event) {
-            double x = event.getX(), y = event.getY();
-            currEditLineEndPt.center = currEditLine.end = new DrawingPt(x, y);
-            updateCurrEditTool();
+            onMouseMoved(event);
         }
         @Override
         public void onMouseClick(MouseEvent event) {
