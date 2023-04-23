@@ -35,7 +35,8 @@ public class CanvasDrawingView extends DrawingView implements DrawingModelListen
     protected BaseDrawingElements.CircleDrawingElement currEditLineEndPt;
     protected BaseDrawingElements.LineDrawingElement currEditLine;
 
-    protected List<BaseDrawingElements.LineDrawingElement> currLines = new ArrayList<>();
+    protected BaseDrawingElements.GroupDrawingElement content = (BaseDrawingElements.GroupDrawingElement) model.getContent();
+
 
     public CanvasDrawingView(DrawingDocModel model) {
         super(model);
@@ -80,7 +81,7 @@ public class CanvasDrawingView extends DrawingView implements DrawingModelListen
             currEditLineStartPt = new BaseDrawingElements.CircleDrawingElement(pt, 2);
             currEditLineEndPt = new BaseDrawingElements.CircleDrawingElement(pt, 2);
             currEditLine = new BaseDrawingElements.LineDrawingElement(pt, pt);
-            currLines.add(currEditLine);
+            content.elements.add(currEditLine);
             updateCurrEditTool();
             setToolHandler(new StatePt2_LinesToolStateHandler());
         }
@@ -122,12 +123,18 @@ public class CanvasDrawingView extends DrawingView implements DrawingModelListen
             DrawingPt pt = new DrawingPt(x, y);
             currEditLineEndPt = new BaseDrawingElements.CircleDrawingElement(pt, 2);
             currEditLine.end = pt;
-            currLines.add(currEditLine);
+
+            BaseDrawingElements.LineDrawingElement addToModel = currEditLine;
+            content.elements.forEach(element-> System.out.println(element));
+            content.elements.add(addToModel);
+            System.out.println(content.elements.size());
+
+            model.setContent(content);
+
             currEditLineStartPt = currEditLineEndPt;
             currEditLine = new BaseDrawingElements.LineDrawingElement(pt, pt);
+
             updateCurrEditTool();
-            BaseDrawingElements.GroupDrawingElement content = (BaseDrawingElements.GroupDrawingElement) model.getContent();
-            System.out.println("content avant  " + content.elements);
 
         }
 
@@ -176,15 +183,14 @@ public class CanvasDrawingView extends DrawingView implements DrawingModelListen
             currEditLine.accept(visitor);
         }
 
-        for (BaseDrawingElements.LineDrawingElement line : currLines) {
+        content.elements.forEach(element-> element.accept(visitor) );
+    /*    for (BaseDrawingElements.LineDrawingElement line :  content) {
             line.accept(visitor);
-        }
+        }*/
         drawingPane.getChildren().addAll(currToolShapes);
     }
 
     private void onClickToolReset() {
-        // Récupérer le modèle
-        BaseDrawingElements.GroupDrawingElement content = (BaseDrawingElements.GroupDrawingElement) model.getContent();
 
         // Vider les éléments du contenu
         content.elements.clear();
@@ -199,7 +205,7 @@ public class CanvasDrawingView extends DrawingView implements DrawingModelListen
         drawingPane.getChildren().clear();
 
         //Vide le tableau de lignes
-        currLines.clear();
+        content.elements.clear();
 
     }
 
@@ -213,7 +219,6 @@ public class CanvasDrawingView extends DrawingView implements DrawingModelListen
 
     public void addLineToContent(){
         BaseDrawingElements.LineDrawingElement addToModel = currEditLine;
-        BaseDrawingElements.GroupDrawingElement content = (BaseDrawingElements.GroupDrawingElement) model.getContent();
         content.elements.add(addToModel);
         model.setContent(content);
         currEditLine = null;
@@ -223,6 +228,7 @@ public class CanvasDrawingView extends DrawingView implements DrawingModelListen
         setToolHandler(new DefaultSelectToolStateHandler());
         drawingPane.setCursor(Cursor.DEFAULT);
     }
+
     protected class StateInit_LineToolStateHandler extends DefaultSelectToolStateHandler {
         @Override
         public void onMouseEntered() {
