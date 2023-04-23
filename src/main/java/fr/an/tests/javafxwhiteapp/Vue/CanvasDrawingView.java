@@ -25,9 +25,7 @@ import java.util.List;
 public class CanvasDrawingView extends DrawingView implements DrawingModelListener {
 
     protected BorderPane component;
-    // to add javafx.scene.shape.* objects converted from model
     protected Pane drawingPane;
-
     protected ToolStateHandler currToolStateHandler = new DefaultSelectToolStateHandler();
     protected ObservableList<Node> currToolShapes = FXCollections.observableArrayList();
 
@@ -35,8 +33,8 @@ public class CanvasDrawingView extends DrawingView implements DrawingModelListen
     protected BaseDrawingElements.CircleDrawingElement currEditLineEndPt;
     protected BaseDrawingElements.LineDrawingElement currEditLine;
 
+    //List des Elements
     protected BaseDrawingElements.GroupDrawingElement content = (BaseDrawingElements.GroupDrawingElement) model.getContent();
-
 
     public CanvasDrawingView(DrawingDocModel model) {
         super(model);
@@ -50,15 +48,17 @@ public class CanvasDrawingView extends DrawingView implements DrawingModelListen
             Button resetToolButton = new Button("Reset");
             resetToolButton.setOnAction(e -> onClickToolReset());
             toolBar.getItems().add(resetToolButton);
+
+            //Button +Line
             Button newLineButton = new Button("+Line");
             newLineButton.setOnAction(e -> onClickToolNewLine());
             toolBar.getItems().add(newLineButton);
 
+            //Button +Lines
             Button newLinesButton = new Button("+Lines");
             newLinesButton.setOnAction(e -> onClickToolNewLines());
             toolBar.getItems().add(newLinesButton);
         }
-
         refreshModelToView();
     }
 
@@ -70,10 +70,15 @@ public class CanvasDrawingView extends DrawingView implements DrawingModelListen
         currEditLine = new BaseDrawingElements.LineDrawingElement(pt, pt);
     }
 
+    private void setNull(){
+        currEditLine = null;
+        currEditLineStartPt = null;
+        currEditLineEndPt = null;
+    }
+
     private void onClickToolNewLines() {
         this.currToolStateHandler = new StateInit_LinesToolStateHandler();
     }
-
 
     protected class StateInit_LinesToolStateHandler extends DefaultSelectToolStateHandler {
         @Override
@@ -128,9 +133,7 @@ public class CanvasDrawingView extends DrawingView implements DrawingModelListen
             currEditLine.end = pt;
 
             BaseDrawingElements.LineDrawingElement addToModel = currEditLine;
-            content.elements.forEach(element-> System.out.println(element));
             content.elements.add(addToModel);
-            System.out.println(content.elements.size());
 
             model.setContent(content);
 
@@ -200,9 +203,7 @@ public class CanvasDrawingView extends DrawingView implements DrawingModelListen
 
         // Réinitialiser le modèle et les éléments de dessin
         model.setContent(content);
-        currEditLine = null;
-        currEditLineStartPt = null;
-        currEditLineEndPt = null;
+        setNull();
 
         // Effacer le panneau de dessin
         drawingPane.getChildren().clear();
@@ -220,13 +221,12 @@ public class CanvasDrawingView extends DrawingView implements DrawingModelListen
         updateCurrEditTool();
     }
 
+
     public void addLineToContent(){
         BaseDrawingElements.LineDrawingElement addToModel = currEditLine;
         content.elements.add(addToModel);
         model.setContent(content);
-        currEditLine = null;
-        currEditLineStartPt = null;
-        currEditLineEndPt = null;
+        setNull();
         updateCurrEditTool();
         setToolHandler(new DefaultSelectToolStateHandler());
         drawingPane.setCursor(Cursor.DEFAULT);
@@ -244,7 +244,6 @@ public class CanvasDrawingView extends DrawingView implements DrawingModelListen
             updateCurrEditTool();
             setToolHandler(new StatePt1_LineToolStateHandler());
         }
-
     }
 
     protected class StatePt1_LineToolStateHandler extends DefaultSelectToolStateHandler {
@@ -263,7 +262,6 @@ public class CanvasDrawingView extends DrawingView implements DrawingModelListen
             addLineToContent();
         }
     }
-
 
     @Override
     public void onModelChange() {
