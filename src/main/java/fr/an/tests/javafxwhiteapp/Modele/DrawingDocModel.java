@@ -8,15 +8,10 @@ import java.util.List;
 public class DrawingDocModel {
 
     protected List<DrawingModelListener> listeners = new ArrayList<>();
-    protected String documentName;
     protected DrawingElement content; // was String before step8
 
     public void addListener(DrawingModelListener listener) {
         listeners.add(listener);
-    }
-
-    public void removeListener(DrawingModelListener listener) {
-        listeners.remove(listener);
     }
 
     private void fireModelChange() {

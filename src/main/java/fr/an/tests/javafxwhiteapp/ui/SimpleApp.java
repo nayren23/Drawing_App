@@ -17,7 +17,6 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class SimpleApp extends Application {
@@ -48,8 +47,6 @@ public class SimpleApp extends Application {
 		}
 		mainBorderPanel.setTop(menuAndToolbar);
 
-
-
 		DrawingDocModel model = new DrawingDocModel();
 
 		DrawingElement content = createSimpleDrawing();
@@ -65,17 +62,9 @@ public class SimpleApp extends Application {
 			mainBorderPanel.setCenter(splitViewPane);
 		}
 
-
-
 		Scene scene = new Scene(mainBorderPanel, 640, 480);
 		stage.setScene(scene);
 		stage.show();
-	}
-
-	private void onClickToolNewLine() {
-	}
-
-	private void onClickToolReset() {
 	}
 
 	private static DrawingElement createSimpleDrawing() {

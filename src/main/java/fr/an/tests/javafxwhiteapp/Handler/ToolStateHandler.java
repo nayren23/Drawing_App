@@ -7,4 +7,5 @@ public abstract class ToolStateHandler {
     public abstract void onMouseEntered();
     public abstract void onMouseMove(MouseEvent event);
     public abstract void onMouseClick(MouseEvent event);
+    public abstract void OnRightMousePressed(MouseEvent event);
 }

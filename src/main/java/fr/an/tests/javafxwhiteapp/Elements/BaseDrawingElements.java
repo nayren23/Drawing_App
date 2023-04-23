@@ -47,6 +47,7 @@ public class BaseDrawingElements {
         public void accept(DrawingElementVisitor visitor) {
             visitor.caseLine(this);
         }
+
     }
     public static class RectangleDrawingElement extends DrawingElement {
         public DrawingPt upLeft;

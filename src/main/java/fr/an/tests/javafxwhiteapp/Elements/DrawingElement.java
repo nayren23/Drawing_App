@@ -17,7 +17,6 @@ import fr.an.tests.javafxwhiteapp.Visitors.DrawingElementVisitor;
  * </ul>
  */
 public abstract class DrawingElement {
-    // Rien pour l'instant, à ajouter : le pattern visiteur (visitor design pattern)
 
     /**
      * Visitor design pattern
