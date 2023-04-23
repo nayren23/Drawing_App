@@ -14,10 +14,13 @@ import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ToolBar;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CanvasDrawingView extends DrawingView implements DrawingModelListener {
@@ -28,11 +31,14 @@ public class CanvasDrawingView extends DrawingView implements DrawingModelListen
 
     protected ToolStateHandler currToolStateHandler = new DefaultSelectToolStateHandler();
     protected ObservableList<Node> currToolShapes = FXCollections.observableArrayList();
+
     protected BaseDrawingElements.CircleDrawingElement currEditLineStartPt;
     protected BaseDrawingElements.CircleDrawingElement currEditLineEndPt;
     protected BaseDrawingElements.LineDrawingElement currEditLine;
 
-    
+    protected List<BaseDrawingElements.LineDrawingElement> currLines = new ArrayList<>();
+    protected boolean isAddingLines = false;
+
     public CanvasDrawingView(DrawingDocModel model) {
         super(model);
         model.addListener(this); // publish&subscribe design pattern
@@ -48,8 +54,92 @@ public class CanvasDrawingView extends DrawingView implements DrawingModelListen
             Button newLineButton = new Button("+Line");
             newLineButton.setOnAction(e -> onClickToolNewLine());
             toolBar.getItems().add(newLineButton);
+
+            Button newLinesButton = new Button("+Lines");
+            newLinesButton.setOnAction(e -> onClickToolNewLines());
+            toolBar.getItems().add(newLinesButton);
         }
+        
         refreshModelToView();
+    }
+
+    private void onClickToolNewLines() {
+        System.out.println("je repasse");
+        this.currToolStateHandler = new StateInit_LinesToolStateHandler();
+    }
+
+    protected class StateInit_LinesToolStateHandler extends DefaultSelectToolStateHandler {
+        @Override
+        public void onMouseEntered() {
+            drawingPane.setCursor(Cursor.CROSSHAIR);
+        }
+
+        @Override
+        public void onMouseClick(MouseEvent event) {
+            System.out.println("mais nannnn");
+            double x = event.getX(), y = event.getY();
+
+            DrawingPt pt = new DrawingPt(x, y);
+            currEditLineStartPt = new BaseDrawingElements.CircleDrawingElement(pt, 20);
+            currEditLineEndPt = new BaseDrawingElements.CircleDrawingElement(pt, 20);
+            currEditLine = new BaseDrawingElements.LineDrawingElement(pt, pt);
+            currLines.add(currEditLine);
+            isAddingLines = true;
+            updateCurrEditTool();
+            setToolHandler(new StatePt2_LinesToolStateHandler());
+            System.out.println("je suis la");
+        }
+    }
+
+    /**
+     Classe interne qui gère l'état de l'outil de dessin de lignes à deux points.
+     Hérite de DefaultSelectToolStateHandler.
+     */
+    protected class StatePt2_LinesToolStateHandler extends DefaultSelectToolStateHandler {
+
+        /**
+         Modifie le curseur pour un curseur en forme de croix.
+         */
+        @Override
+        public void onMouseEntered() {
+            drawingPane.setCursor(Cursor.CROSSHAIR);
+        }
+
+        /**
+         Met à jour les coordonnées du deuxième point de la ligne en cours d'édition et met à jour l'outil de dessin.
+         @param event L'événement de la souris.
+         */
+        @Override
+        public void onMouseMove(MouseEvent event) {
+            double x = event.getX(), y = event.getY();
+            currEditLineEndPt.center = currEditLine.end = new DrawingPt(x, y);
+            updateCurrEditTool();
+        }
+
+        /**
+         Ajoute la ligne en cours d'édition au contenu du modèle, réinitialise l'outil de dessin
+         et passe à l'outil de sélection.
+         @param event L'événement de la souris.
+         */
+        @Override
+        public void onMouseClick(MouseEvent event) {
+            double x = event.getX(), y = event.getY();
+            DrawingPt pt = new DrawingPt(x, y);
+            currEditLineEndPt = new BaseDrawingElements.CircleDrawingElement(pt, 20);
+            currEditLine.end = pt;
+            currLines.add(currEditLine);
+            currEditLineStartPt = currEditLineEndPt;
+            currEditLine = new BaseDrawingElements.LineDrawingElement(pt, pt);
+            updateCurrEditTool();
+        }
+
+        @Override
+        public void onKeyPressed(KeyEvent event) {
+            if (event.getCode() == KeyCode.CONTROL) {
+                isAddingLines  = false;
+                System.out.println("c'est la fin");
+            }
+            }
     }
 
     @Override
@@ -68,13 +158,26 @@ public class CanvasDrawingView extends DrawingView implements DrawingModelListen
         drawingPane.setOnMouseClicked(e -> currToolStateHandler.onMouseClick(e));
     }
 
+    /**
+     Cette méthode permet de mettre à jour l'outil de dessin courant en supprimant toutes les formes
+     de l'outil de dessin courant et en les remplaçant par les nouvelles formes créées par l'utilisateur.
+     Elle utilise un visiteur JavaFX pour parcourir les éléments de dessin actuellement sélectionnés,
+     tels que la ligne de début, la ligne de fin, la ligne de dessin actuelle et toutes les lignes
+     actuelles, afin de mettre à jour leur affichage dans le dessin.
+     @return void
+     */
     protected void updateCurrEditTool() {
         drawingPane.getChildren().removeAll(currToolShapes);
         currToolShapes.clear();
         JavafxDrawingElementVisitor visitor = new JavafxDrawingElementVisitor(currToolShapes);//
         if (currEditLineStartPt != null) { currEditLineStartPt.accept(visitor); }
         if (currEditLineEndPt != null) { currEditLineEndPt.accept(visitor); }
-        if (currEditLine != null) { currEditLine.accept(visitor); }
+        if (currEditLine != null) {
+            currEditLine.accept(visitor);
+        }
+        for (BaseDrawingElements.LineDrawingElement line : currLines) {
+            line.accept(visitor);
+        }
         drawingPane.getChildren().addAll(currToolShapes);
     }
 
@@ -109,6 +212,8 @@ public class CanvasDrawingView extends DrawingView implements DrawingModelListen
             currEditLine = new BaseDrawingElements.LineDrawingElement(pt, pt);
             updateCurrEditTool();
             setToolHandler(new StatePt1_LineToolStateHandler());
+            System.out.println("je suis ici");
+
         }
     }
 
@@ -183,8 +288,7 @@ public class CanvasDrawingView extends DrawingView implements DrawingModelListen
         }
         @Override
         public void caseOther(DrawingElement p) {
-// "not implemented/recognized drawingElement "+ p.getClass().getName();
+        // "not implemented/recognized drawingElement "+ p.getClass().getName();
         }
-
     }
 }
